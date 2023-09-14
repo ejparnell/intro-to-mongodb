@@ -327,3 +327,243 @@ db.tng.insertMany([
     }
 ])
 ```
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/create.js')
+```
+
+If successful we should get back a `true` in the terminal.
+
+Since the second param is optional we can leave it off and just pass in an array of objects that represent the documents we would like to insert. Notice that the last document is missing the `rank` field/value pair. Since MongoDB does not require us to predfine a schema for our documents in a collection they can differe in field/value pairs.
+
+### Read
+
+Above we created or inserted in two different ways; `db.collections.insertOne()` and `db.collections.insertMany()`. Now that there is something in the collection of `tng` let's read from it. There are two ways a read action can take:
+
+- Index - Reading/retrieving all documents.
+- Show - Reading/retrieving a single document.
+
+#### Index
+
+We will start with index then move to show. Inside of `bin/index.js`:
+
+```js
+console.log(db.tng.find())
+```
+
+- `console.log` - Logging to the console what the result are from the `.find()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
+- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to read from. Unlike with a create method if we make a spelling mistake here it will not create a mispelled collection, it will just give us an error or no reponse.
+- `find` - MongoDB Collection method to find all or a subset of documents in a collection.
+
+Again let's use the documentation to see what this method is expecting. [db.collections.find()](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/).
+
+This method can have up to three parameters. All of them being optional. We will just focus on the first parameter with is the query. The query is going to be an object we pass in with key/value pairs representing what we are searching for.
+
+Now that we know what this method is expecting let's use it. Back in `bin/index.js`:
+
+```js
+console.log(db.tng.find({}))
+```
+
+- `{}` - The empty object in we just added is the query. To find all documents in a collection we can either pass in an empty object or leave out the object all together. Both work and are valid options.
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/index.js')
+```
+
+If successful we should see all the documents we have created so far followed by a `true`. The `true` is just feedback that the shell gives us when we are able to pass it JavaScript code it was able to run without errors.
+
+```js
+[
+  {
+    _id: ObjectId("6501effb4a253ea725645064"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain'
+  },
+  {
+    _id: ObjectId("6501effd4a253ea725645065"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain'
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645066"),
+    name: 'William T. Riker',
+    rank: 'Captain'
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645067"),
+    name: 'Beverly Crusher',
+    rank: 'Chief Medical Officer'
+  },
+  { _id: ObjectId("6501f0004a253ea725645068"), name: 'Deanna Troi' }
+]
+true
+```
+
+> *Note*: For all these commands we could just run straight in the shell. Some of them make more sense to run directly in the shell than others. Our `db.collection.find()` method is a perfect example of a command that is fit to be ran in the shell. `db.collection.insertMany()` method is an example of one we might want to write a script then load and run it in the shell. It's up to you on what you would like to make your main go to after this talk.
+
+Let's add some key/value pairs to our query object and narrow down our index. Back inside of `bin/index.js`:
+
+```js
+console.log(db.tng.find({rank: 'Captain'}))
+```
+
+- `rank` - Field name we want to search through.
+- `Captain` - Value we want to search for. This is case sensitve so a `captain` will not return any found documents.
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/index.js')
+```
+
+If sucessful we should get back all the documents that have the field/value pair of `rank: 'Captain'` followed by a `true`.
+
+```js
+[
+  {
+    _id: ObjectId("6501effb4a253ea725645064"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain'
+  },
+  {
+    _id: ObjectId("6501effd4a253ea725645065"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain'
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645066"),
+    name: 'William T. Riker',
+    rank: 'Captain'
+  }
+]
+true
+```
+
+TODO: Update insert data to have some different data types to do these fancy queries
+The method `db.collection.find()` can be used to query for just about anything we would like in our database. We also have [Comparison Query Operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/) that we can use. 
+
+#### Show
+
+Now that we have an index action working we can move on to the show action. Inside of `bin/show.js`:
+
+```js
+console.log(db.tng.findOne())
+```
+
+- `console.log` - Logging to the console what the result are from the `.findOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
+- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to read from. Unlike with a create method if we make a spelling mistake here it will not create a mispelled collection, it will just give us an error or no reponse.
+- `findOne` - MongoDB Collection method to find one document. If there are multiple documents making the query passed it, this method will returnt the first it encounters.
+
+Always use the documentation to see what this method is expecting. [db.collections.findOne()](https://www.mongodb.com/docs/manual/reference/method/db.collection.findOne/).
+
+Just like with the `db.collection.find()` this method has three optional parameters. We will focus on the query parameter which is the first one passed in.
+
+Back in `bin/show.js`:
+
+```js
+console.log(db.tng.findOne({name: 'Beverly Crusher'}))
+```
+
+- `name` - The field we want to search through.
+- `Beverly Crusher`- The value we are searching for. This is also case and space sensitive.
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/show.js')
+```
+
+We should see a single document with a field/value pair of `name: 'Beverly Crusher'` followed by `true`.
+
+```js
+{
+  _id: ObjectId("6501f0004a253ea725645067"),
+  name: 'Beverly Crusher',
+  rank: 'Chief Medical Officer'
+}
+true
+```
+
+Let's take a notice at what is being return in both the `db.collection.find()` and the `db.collections.findOne()`. The `db.collection.find()` is returning an array of documents while the `db.collections.findOne()` is returning just the document. This is an imported difference that might go over looked. If we are being given back and array of posible documents we need to handle it as such.
+
+### Update
+
+Now that we are able to read our documents let's start to update some of them. There are a couple of ways to update documents in MongoDB we are going to be looking at just two collection methods for update: `db.collection.updateMany()` and `db.collection.updateOne()`. Inside of `bin/update.js`:
+
+```js
+console.log(db.tng.updateMany())
+```
+
+- `console.log` - Logging to the console what the result are from the `.updateMany()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
+- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to update in.
+- `updateMany` - A collection methods used to update mulitple documents in a collection.
+
+Let's take a look at the documentation to see what this method is expecting. [dv.collection.updateMany](https://www.mongodb.com/docs/manual/reference/method/db.collection.updateMany/).
+
+This method is expecting 3 parameters. The first two are not optional and will need to be provided. The third one is optional and we will not be using it during this talk. Taken directly from the MongoDB documentation:
+
+```js
+db.collection.updateMany(
+   <filter>,
+   <update>,
+   {
+     upsert: <boolean>,
+     writeConcern: <document>,
+     collation: <document>,
+     arrayFilters: [ <filterdocument1>, ... ],
+     hint:  <document|string>        // Available starting in MongoDB 4.2.1
+   }
+)
+```
+
+- `<filter>` - Used to find which documents we want to update. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for.
+- `<update>` - What we want to update in the found documents.
+
+Now that we know what `updateMany` expecting let's use it:
+
+```js
+console.log(db.tng.updateMany({
+    name: 'Jean-Luc Picard'
+}, {
+    $set: {
+        onceBorg: true
+    }
+}))
+```
+
+- `{ name: 'Jean-Luc Picard' }` - We are search for all documents with the `name` of `Jean-Luc Picard`. Since we have two in our collection this should match two documents.
+- `{$set: { onceBorg: true }}` - Adding a new field/value pair. Since we are adding to our documents we need to use `$set` and pass it a new field/value pair to add.
+
+> *Note*: There is a differnce in using `$set` to add a new field/value pair and `$set` to update a field/value pair. When we add a new field/value pair we are call the [`$set`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#mongodb-pipeline-pipe.-set) that is an alais for [`$addFields`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#mongodb-pipeline-pipe.-addFields). When we are updating an exsiting field/value pair we are calling the [`$set`](mongodb.com/docs/manual/reference/operator/update/set/#mongodb-update-up.-set) operator that will replace the value of a field/value pair.
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/update.js')
+```
+
+If successful we should get back an object with a couple of key/value pairs followed by a `true`.
+
+```js
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 2,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+true
+```
+
+- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
+- `insertedId: null` - In some cases, not this one, we can query the collection see if there is something to update if not then we can add a new document with the field/value pairs we wanted to update. If this is the case we would be creating new documents and we would get back the number of new documents created here. By default this option is set to false. Expect this key/value pair to be `null` unless you are coding to have this functionality.
+- `matchedCount: 2` - The documents that we found with the filter we passed in. In our case since we are using the `$set` to add a field/value pair to a document.
+- 
