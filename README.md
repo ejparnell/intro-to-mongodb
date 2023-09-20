@@ -566,4 +566,295 @@ true
 - `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
 - `insertedId: null` - In some cases, not this one, we can query the collection see if there is something to update if not then we can add a new document with the field/value pairs we wanted to update. If this is the case we would be creating new documents and we would get back the number of new documents created here. By default this option is set to false. Expect this key/value pair to be `null` unless you are coding to have this functionality.
 - `matchedCount: 2` - The documents that we found with the filter we passed in. In our case since we are using the `$set` to add a field/value pair to a document.
-- 
+- `modifiedCount: 0` - This gives us back the count of how many documents were modified in the last command. Notice here that it's `0` and not `2`. More on that below.
+- `upsertedCount: 0` - To upsert a document we would have to update and insert at the same time. (inSERT + UPdate = upsert). `0` here because we did not upsert.
+
+> *Note*: The reason as to why we are getting a `0` for the `modifiedCount` is because we are using the [`$set`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#mongodb-pipeline-pipe.-set) to add a new field. If we were to run the command again we would see an `modifiedCount` change to `2`. This is becuase we are now updating an existing field and are using the update [`$set`](mongodb.com/docs/manual/reference/operator/update/set/#mongodb-update-up.-set) operator.
+
+Before we dive into `db.collection.updateOne()` let's run the index file again to see our changes. Inside of your terminal let's query all the documents in the `tng` collection:
+
+```js
+db.tng.find()
+```
+
+And we should see the added field/value pair on our `Jean-Luc Picard` documents:
+
+```js
+[
+  {
+    _id: ObjectId("6501effb4a253ea725645064"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain',
+    onceBorg: true
+  },
+  {
+    _id: ObjectId("6501effd4a253ea725645065"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain',
+    onceBorg: true
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645067"),
+    name: 'Beverly Crusher',
+    rank: 'Chief Medical Officer'
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645066"),
+    name: 'William T. Riker',
+    rank: 'Captain'
+  },
+  { _id: ObjectId("6501f0004a253ea725645068"), name: 'Deanna Troi' }
+]
+```
+
+Now we can dive into `db.collection.updateOne()`. Back inside of `bin/update.js` let's comment out the `db.collection.updateMany()` command before we write our new update command:
+
+```js
+console.log(db.tng.updateOne())
+```
+
+This method can intake 3 params. Just like the `db.collection.updateMany()` we are just going to focus on the first 2 which are required. Taken from the documentation:
+
+```js
+db.collection.updateOne(
+   <filter>,
+   <update>,
+   {
+     upsert: <boolean>,
+     writeConcern: <document>,
+     collation: <document>,
+     arrayFilters: [ <filterdocument1>, ... ],
+     hint:  <document|string>        // Available starting in MongoDB 4.2.1
+   }
+)
+```
+
+- `<filter>` - Used to find which documents we want to update. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for. If there are mulitple documents matching the fileter `updateOne` will update the first one it matches.
+- `<update>` - What we want to update in the found document.
+
+Now we know what this method is expecting let's us it:
+
+```js
+console.log(db.tng.updateOne({
+    name: 'Jean-Luc Picard'
+}, {
+    $set: {
+        onceBorg: false,
+        name: 'Locutus'
+    }
+}))
+```
+
+- `{ name: 'Jean-Luc Picard' }` - We are search for all documents with the `name` of `Jean-Luc Picard`. Since we have two in our collection this should match two documents but will only update the first one it finds.
+- `$set: { onceBorg: false, name: 'Locutus' }` - Updating the found documents `onceBorg` and `name` values.
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/update.js')
+```
+
+If this was successful we should see the following:
+
+```js
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+true
+```
+
+- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
+- `insertedId: null` - In some cases, not this one, we can query the collection see if there is something to update if not then we can add a new document with the field/value pairs we wanted to update. If this is the case we would be creating new documents and we would get back the number of new documents created here. By default this option is set to false. Expect this key/value pair to be `null` unless you are coding to have this functionality.
+- `matchedCount: 1` - The document that we found with the filter we passed in.
+- `modifiedCount: 1` - This gives us back the count of how many documents were modified in the last command. Since in this expample we are modifiying an existing field/value pair we get back a `modifiedCount` value.
+- `upsertedCount: 0` - To upsert a document we would have to update and insert at the same time. (inSERT + UPdate = upsert). `0` here because we did not upsert.
+
+Lastly for update let's see how that last command upated our documents. In your terminal use the command:
+
+```js
+db.tng.find()
+```
+
+And we should see the following:
+
+```js
+[
+  {
+    _id: ObjectId("6501effb4a253ea725645064"),
+    name: 'Locutus',
+    rank: 'Captain',
+    onceBorg: false
+  },
+  {
+    _id: ObjectId("6501effd4a253ea725645065"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain',
+    onceBorg: true
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645067"),
+    name: 'Beverly Crusher',
+    rank: 'Chief Medical Officer'
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645066"),
+    name: 'William T. Riker',
+    rank: 'Captain'
+  },
+  { _id: ObjectId("6501f0004a253ea725645068"), name: 'Deanna Troi' }
+]
+```
+
+### Delete
+
+Lastly we have come to our last CRUD action, delete. And just like with our other CRUD methods we are given the option to either delete a single document or to delete multiple documents. We will use the single delete followed by the mulitple delete. 
+
+Our first command that we will use is `db.collection.deleteOne()`. Inside of our `bin/delete.js`:
+
+```js
+console.log(db.tng.deleteOne())
+```
+
+- `console.log` - Logging to the console what the result are from the `.deleteOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
+- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to update in.
+- `deleteOne` - A collection methods used to delete a single document from a collection.
+
+Using the documentation let's see what this method is expecting. Taken from the documentation:
+
+```js
+db.collection.deleteOne(
+    <filter>,
+    {
+      writeConcern: <document>,
+      collation: <document>,
+      hint: <document|string>        // Available starting in MongoDB 4.4
+    }
+)
+```
+
+This method can intake 2 parameters. The first is required and the second is optional. We will not be using the second parameter for this talk.
+
+- `<filter>` - Used to find which documents we want to delete. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for. If there are mulitple documents matching the fileter `delete` will remove the first one it matches.
+
+Let's pass the filter so we can remove a single document:
+
+```js
+console.log(db.tng.deleteOne({
+    name: 'Beverly Crusher'
+}))
+```
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/delete.js')
+```
+
+If this was successful we should see the following:
+
+```js
+{ acknowledged: true, deletedCount: 1 }
+true
+```
+
+- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
+- `deletedCount: 1` - The count of how many documents were deleted when running this command.
+
+Just like with update let's query our collection in the terminal:
+
+```js
+db.tng.find()
+```
+
+We can see that the document of `Beverly Crusher` is gone:
+
+```js
+[
+  {
+    _id: ObjectId("6501effb4a253ea725645064"),
+    name: 'Locutus',
+    rank: 'Captain',
+    onceBorg: false
+  },
+  {
+    _id: ObjectId("6501effd4a253ea725645065"),
+    name: 'Jean-Luc Picard',
+    rank: 'Captain',
+    onceBorg: true
+  },
+  {
+    _id: ObjectId("6501f0004a253ea725645066"),
+    name: 'William T. Riker',
+    rank: 'Captain'
+  },
+  { _id: ObjectId("6501f0004a253ea725645068"), name: 'Deanna Troi' }
+]
+```
+
+At the end of this talk let's remove the rest of the documents from our collection using the d`db.collection.deleteMany()` method. Back inside of the `bin/delete.js` first comment out the last delete method and let's add a new delete method:
+
+```js
+console.log(db.tng.deleteMany())
+```
+
+- `console.log` - Logging to the console what the result are from the `.deleteOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
+- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to update in.
+- `deleteMany` - A collection methods used to delete a multiple documents from a collection.
+
+Before we use this method let's see what it needs. Taken from the documentation:
+
+```js
+db.collection.deleteMany(
+   <filter>,
+   {
+      writeConcern: <document>,
+      collation: <document>
+   }
+)
+```
+
+The above method can intake two parameters. The first is mandatory and we will need to use and the second is optional and we will not use in this talk.
+
+- `<filter>` - Used to find which documents we want to delete. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for.
+
+Now that we know what we need for this method let's use it:
+
+```js
+console.log(db.tng.deleteMany({}))
+```
+
+- `{}` - An empty filter. When an empty filter is passed in we will remove all documents from the collection
+
+Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+
+```js
+load('./bin/delete.js')
+```
+
+If this was successful we should see the following:
+
+```js
+{ acknowledged: true, deletedCount: 4 }
+true
+```
+
+- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
+- `deletedCount: 4` - The count of how many documents were deleted when running this command.
+
+Lastly let's query the collection again and see if there is anything left. Inside of our shell:
+
+```js
+db.tng.find()
+```
+
+We can see that there is nothing returned.
+
+## Wrap up
+
+MongoDB is a NoSQL document-orientated database that allows us to store loosly related documents is collections. While interacting with MongoDB through the shell like we did in this talk is not something that we would use in a real world application it's a must know for development. As developers we need to know how to query our databases directly to see how our code manipulates the documents.
