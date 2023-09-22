@@ -4,39 +4,54 @@ This talk is going to assume you have the following installed:
 
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Node.js](https://nodejs.org/en)
+
+This talk uses:
+
 - [MongoDB Atlas](https://www.mongodb.com/products/platform/cloud)
+
+This talk expects you to have a base knowledge of:
+
+- CLI
+- JavaScript
 
 ## Overview
 
-Okie dokie artichokes, let's come together and talk about MongoDB. This talk will cover the following:
+Okie dokie, artichokes, let's come together and talk about MongoDB. This talk will cover the following:
+- [An Introduction to MongoDB](#an-introduction-to-mongodb)
+  - [Overview](#overview)
+  - [Databases](#databases)
+  - [SQL Databases](#sql-databases)
+  - [NoSQL Database](#nosql-database)
+  - [MongoDB](#mongodb)
+    - [Connection to Atlas](#connection-to-atlas)
+  - [We do: Databases and Collections](#we-do-databases-and-collections)
+    - [You do: Databases and Collections](#you-do-databases-and-collections)
+    - [Demo: Documents](#demo-documents)
+  - [CRUD](#crud)
+    - [We do: Create](#we-do-create)
+    - [You Do: Create](#you-do-create)
+    - [We do: Read](#we-do-read)
+      - [Index](#index)
+      - [Show](#show)
+    - [You Do: Read](#you-do-read)
+    - [We do: Update](#we-do-update)
+    - [You Do: Update](#you-do-update)
+    - [We do: Delete](#we-do-delete)
+    - [You Do: Delete](#you-do-delete)
+  - [Wrap up](#wrap-up)
 
-- Databases
-    - NoSQL and SQL databases
-    - MongoDB
-        - Collections
-        - Documents
-        - BSON
-- CRUD
-    - Create a document
-    - Read all documents
-    - Read a single document
-    - Update mulitple documents
-    - Update a single document
-    - Delete multiple documents
-    - Delete a single document
-- Seeding a database
 
 ## Databases
 
-Databases are an organized collection of data that is stored either locally or remotely. They are designed to efficiently manage, store, retrieve, and manipulate data for whatever purpose we need. Think of a social media site. A database is a fundamental part of that site. We need to manange, store, and retrieve any posts the user makes.
+Databases are an organized collection of data stored locally or remotely. They are designed to efficiently manage, store, retrieve, and manipulate data for whatever purpose we need. Think of a social media site. A database is a fundamental part of that site. We need to manage, store, and retrieve any posts the user makes.
 
 Characteristics of a database include (but not limited to):
 
-- Data Structure - Data is organized in some format. Databases structure will very between different database solutions.
-- Data Relationships - Data can be related to each other in some way. Using the social media example a User (single database entry) can have a Profile (seperate database entry). In this example the User can have a Profile resulting in a one to one relationship.
-- Query Language - A way to interact with the Database. Functions and methods that allow us to retrieve, insert, update, and delete data entries.
+- Data Structure - Data is organized in some format. Database structure will vary between different database solutions.
+- Data Relationships - Data can be related to each other somehow. Using the social media example, a User (single database entry) can have a Profile (separate database entry). In this example, the User can have a Profile resulting in a one-to-one relationship.
+- Query Language - A way to interact with the database. Functions and methods that allow us to retrieve, insert, update, and delete data entries.
 
-A couple of database types include (but not limited to):
+A couple of database types include (but are not limited to):
 
 - Relational Database - MySQL, PostgreSQL, Oracle.
 - NoSQL Database - MongoDB.
@@ -46,9 +61,9 @@ A couple of database types include (but not limited to):
 
 ## SQL Databases
 
-SQL databases are a relational database which represents it's data in a table with rows and columnns. SQL tables are a two dimensinal structure consisting of rows and columns. Each table represents a specific enity, while each row is a seprate data entry. Columns, in this structure, represent a specific attribute of data.
+SQL tables are a two-dimensional structure consisting of rows and columns. Each table represents a specific entity, while each row is a separate data entry. Columns in this structure represent a particular attribute of data.
 
-Let's us the social media example again. As a user on a socail media site they can make a profile that contains the users name and username. The profile would be a table, the user who created a profile would be a single row in the profile table, and the name and username would be indvidual columns. 
+Let's use the social media example again. Users on a social media site can make a profile that contains the user's name and username. The profile would be a table, the user who created a profile would be a single row in the profile table, and the name and username would be individual columns. 
 
 **Profile Table**
 
@@ -59,19 +74,19 @@ Let's us the social media example again. As a user on a socail media site they c
 | 3  | Beverly Crusher  | Doctor     |
 | 4  | Deanna Troi      | NULL       |
 
-Notice that there is a column that was not mentioned, `PK`. Every data entry to a SQL database will be given a primary key or `PK`. We can use the primary key to interact with a specific data entity, this can take the form of reading, updating, or deleting that data entity.
+Notice that a column was not mentioned, `PK`. Every data entry to a SQL database will be given a primary key or `PK`. We can use the primary key to interact with a specific data entity; this can take the form of reading, updating, or deleting that data entity.
 
-With the table structure we are reinforcing that every data enity will have the same keys or fields. In the example above if we were to add another row (data entry) that entry would have a name and a username property.
+With the table structure, we are reinforcing that every data entry will have the same keys or fields. In the example above, if we add another row (data entry), that entry would have a name and a username property.
 
 ## NoSQL Database
 
-Not Only SQL or NoSQL database is a database management system for managing data that doesn't fit neatly into a relational database or a SQL database. NoSQL databases are known for their flexibilty, scalability, and ability to handle unstructured data. The key word here is unstructured. In the above section we can see an example of a SQL table. It's structure is predefined. Every entry has a `pk`, `name`, and `username`. Those field might hold `null` values but they are still there. In NoSQL we do not need to have a predefined structure and any `null` field we might have could just be left off. 
+SQL or NoSQL database is a database management system for managing data that doesn't fit neatly into a relational or SQL database. NoSQL databases are known for their flexibility, scalability, and ability to handle unstructured data. The key word here is unstructured. In the above section, we can see an example of a SQL table. Its structure is predefined. Every entry has a `pk`, `name`, and `username`. Those fields might hold `null` values but are still there. NoSQL does not need a predefined structure; any `null` field we might have could be left off. 
 
 There are a couple of data models for NoSQL databases:
 
-- Graph - Represents data as a graph. This makes it ideal for applications that have complex relationships or have network like structures.
-- Column-family stores - Mimics almost a SQL structure with data being housed in columns.
-- Key-Value stores - Data is represented as key/value pairs.
+- Graph - Represents data as a graph. This makes it ideal for applications with complex relationships or network-like structures.
+- Column-family stores - Mimics is almost an SQL structure with data in columns.
+- Key-value stores - Data is represented as key/value pairs.
 - Documents stores - Data is stored in a semi-structed document. This is either JSON or BSON.
 
 **Profile Collection**
@@ -98,60 +113,51 @@ There are a couple of data models for NoSQL databases:
 }
 ```
 
-This structure is what a document stores NoSQL structure would look like. Instead of a table we have a collection. This collection contains BSON objects. Notice that the last object here is missing the `username` key/value pair. This is ok and intentional. Since we are using a NoSQL database we do not have to follow a predefined structure.
+This structure is what a document stores NoSQL structure would look like. Instead of a table, we have a collection. This collection contains BSON objects. Notice that the last object here is missing the `username` key/value pair. This is okay and intentional. Since we are using a NoSQL database, we do not have to follow a predefined structure.
 
 ## MongoDB
 
-MongoDB is a document-orientented (document stores mentionded above) database. Documents are stored as BSON objects, which are flexible schema-less. These documents are contained within a collection. While the data contained in the documents might differ the collection should contain documents that have a similar or related purpose.
+MongoDB is a document-oriented (document stores mentioned above) database. Documents are stored as BSON objects, which are flexible schema-less. These documents are contained within a collection. While the data in the documents might differ, the collection should include documents with a similar or related purpose.
 
 
 ![Social media database](./assets/social-media-database.png)
 
-Let's go back to that social media profile example again. Here is a overview of what this would look like modeled using MongoDB
+Let's go back to that social media profile example again. Here is an overview of what this would look like modeled using MongoDB
 
-- `social-media-app-name` - This is the database. All collections are contained in the database and it's normally named after the application you are creating.
-- `profiles` - This is the collections. Collections contain related or semi related data. Usualy lowercase and a pularl of what you are containing. Since these profile documents in this collection the collection name is `profiles`.
-- The documents are stored in a collection. These are BSON document that contain field/value pairs.
+- `social-media-app-name` - This is the database. All collections are contained in the database and are commonly named after the application you create.
+- `profiles` - This is the collection. Collections contain related or semi-related data. Usually lowercase and plural of what you are containing. Since these are profile documents in this collection, the collection name is `profiles`.
+- The documents are stored in a collection. These are BSON documents that contain field/value pairs.
 
 ### Connection to Atlas
 
-TODO: update this to use the shell and load()
+We will use the [mongosh](https://www.mongodb.com/docs/mongodb-shell/) to connect to your MongoDB Atlas Cloud account.
 
-If you have not already done so follow the instructions [here](https://www.mongodb.com/docs/atlas/driver-connection/#connect-your-application) to obtain your connection string and allow access from your IP address. We will be connecting to your database online.
+Follow the instructions [here](https://www.mongodb.com/docs/atlas/mongo-shell-connection/) to connect via the shell.
 
-Once you have completed the steps from the documentation above:
+## We do: Databases and Collections
 
-- Create a `.env` file located at the root of this repository
-- Inside that file create a new enviromental variable called `URI`
-- Place your connections string as the value of the `URI` variable
-- Test your connection by running the connection file with Node -> `node config/connection.js`
+The following exercises will be done using the MongoDB shell, `mongosh`. Use the above instructions to connect to your Atlas Cloud MongoDB account.
 
-If successful you will see `Successfully connected to Atlas` in your console.
-
-### We do: Databases and Collections
-
-The following exercises are going to be done using the `mongosh`. Use the above instructions to connect to your Atlas Cloud MongoDB account.
-
-A database in MongoDB can hold one or more collections. By default if a database is not provided when entering the shell your database will be `test`.
+A database in MongoDB can hold one or more collections. If a database is not provided when entering the shell, your database will be `test` by default.
 
 ![Terminal shell on test database](./assets/test-database.png)
 
-Notice above how the shell says `test>`. This indicates that we are connected to the `test` database. This database is a catch all for MongoDB interations, if you would like to test some collection/document ideas here is the perfect place to do that before creating another database.
+Notice above how the shell says `test>`. This indicates that we are connected to the `test` database. This database is a catch-all for MongoDB interactions; if you want to test some collection/document ideas, here is the perfect place to do that before creating another database.
 
-In development you want to make sure that you create a new database for each project. Rember that a database can contain many collections. To create a database we can either write a script or type directly into the shell. For this lesson we will be doing a mix of both.
+In development, you want to make sure that you create a new database for each project. Remember that a database can contain many collections. We can write a script or type directly into the shell to create a database. For this lesson, we will be doing a mix of both.
 
-First lets create a script to be ran. Inside of your shell:
+First, let's create a new database called `starTrek`. Inside of your shell:
 
 ```bash
 use starTrek
 ```
 
-- `use` - MongoDB shell command used to use a database. This database can now be refered to in the `db` variable, we will see this soon. If the database has not been created this command will also create it.
-- `starTrek` - Name of the database we want to create. Convention is to use camel case when naming databases in MongoDB. Our databases can be named anything, normally this is named after the application or the part of the application this database is used for.
+- `use` - MongoDB shell command used to use a database. This database can now be referred to in the `db` variable; we will see this soon. If the database is not created, this command will also make it.
+- `starTrek` - Name of the database we want to create. The convention is to use camel case when naming databases in MongoDB. Our databases can be named anything; usually, these are named after the application or the part of the application this database is used for.
 
 ![Star Trek database indicated](./assets/star-trek-database.png)
 
-Notice how the shell is no longer on `test` it's now on `starTrek`. This indicates that we are connected to the `starTrek` database.
+Notice how the shell is no longer on `test`; it's now on `starTrek`. This indicates that we are connected to the `starTrek` database.
 
 We can view all databases by using the command:
 
@@ -160,11 +166,11 @@ show dbs
 ```
 
 - `show` - MongoDB shell command used to show databases and collections.
-- `dbs` - Shortened form of databases. You can also use the long form of `databases` -> `show databases`
+- `dbs` - Shortened form of databases. You can also use the long form of `databases` -> `show databases`.
 
 We should see at least the `test` and the `starTrek` databases.
 
-Before we create a collection let us see what no collections look like in a database. Still inside your shell:
+Before we create a collection, let us see what no collections look like in a database. Still inside your shell:
 
 ```bash
 show collections
@@ -173,9 +179,9 @@ show collections
 - `show` - MongoDB shell command used to show databases and collections.
 - `collections` - What to show. Here we are showing all the collections in the `starTrek` database.
 
-Since there are no collection in the `starTrek` database we just get back and empty line. Let's now create a collection. There are a couple of ways to create a collection. First we can use `db.createColleciton()` method to create a collection in the current database. Or we could use a document create method. Just like with the `use starTrek` command if a collection does not exists when we add a document to it, MongoDB will create it for us.
+Since there is no collection in the `starTrek` database, we just return an empty line. Let's now create a collection. There are a couple of ways to create a collection. First, we can use the `db.createColleciton()` method to create a collection in the current database. Or we could use a document creation method. Just like with the `use starTrek` command, if a collection does not exist when we add a document to it, MongoDB will create it for us.
 
-- `db.createCollection()` - Used when we want to set various options for a collection. This code be setting a mazimum size or document validation rules.
+- `db.createCollection()` - Used when we want to set various options for a collection.
 - Document create method - Used when you just want the default setting for a collection.
 
 Let's create a collection with the `db.createCollection()`. Inside of your shell:
@@ -184,32 +190,30 @@ Let's create a collection with the `db.createCollection()`. Inside of your shell
 db.createCollection('tng')
 ```
 
-If this command is successful we will see:
+If this command is successful, we will see:
 
 ```js
-{ ok: 1 }
+{okay: 1 }
 ```
 
-> *Note*: We won't be setting any options for this lesson, so using a document create method for our purposes would be aceptable and preferable. But for the flow of this lesson we are going to create a collection using the `db.createCollection()` method.
+> *Note*: We won't be setting any options for this lesson, so using a document creation method for our purposes would be acceptable and preferable. But for the flow of this lesson, we will create a collection using the `db.createCollection()` method.
 
-Now is we run the command `show collections` again we should see the newly created `tng` collection.
+If we run the command `show collections` again, we should see the newly created `tng` collection.
 
 ### You do: Databases and Collections
 
 Let's do a rep of the above:
 
-- Create a new database called `gameOfThrones`
-- Inside of your newly created database `gameOfThrones` create a collection called `stark`
-
-TODO: create tests
+- Create a new database called `gameOfThrones`.
+- Inside your newly created database `gameOfThrones`, create a collection called `stark`.
 
 ### Demo: Documents
 
-MongoDB stores its data in BSON documents. BSON is a binary representation of JSON which allows us to store data types that JSON does not allow for. See a full list of what BSON types we can store [here](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-bson-types).
+MongoDB stores its data in BSON documents. BSON is a binary representation of JSON, which allows us to store data types that JSON does not allow for. See a complete list of what BSON types we can store [here](https://www.mongodb.com/docs/manual/reference/bson-types/#std-label-bson-types).
 
-Documents are made of field/value pairs. These look extremly simialr to JavaScript objects.
+Documents are made of field/value pairs. These look incredibly similar to JavaScript objects.
 
-Let's create a document in our `tng` collection. We are going to be venturing out of our shells and writing scripts for these document interations. Inside of `bin/create-demo.js`:
+Let's create a document in our `tng` collection. We will be venturing out of our shells and writing scripts for these document interactions. Inside of `bin/create-demo.js`:
 
 ```js
 db.tng.insertOne({
@@ -218,19 +222,19 @@ db.tng.insertOne({
 })
 ```
 
-> *Note*: If you are using a linter your JavaScript files are going to say that there are some unexpected keywords or come variables are undefined. This is going to be normal for this code. Even though JavaScript might not know all the commands we are using that's ok because MongoDB Shell knows these commands.
+> *Note*: If you are using a linter, your JavaScript files will say that some unexpected keywords or some variables are undefined. This is going to be expected for this code. Even though JavaScript might not know all the commands we are using, that's okay because MongoDB Shell knows these commands.
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database. If you did the `You do: Databases and Collections` you will need to change back to the `starTrek` database with `use starTrek`. After you have changed back to the `starTrek` database load the JavaScript file we just edited:
+Now, let's load and run the file. First, inside your shell, ensure you are in the `starTrek` database. If you did the `You do: Databases and Collections`, you must return to the `starTrek` database with `use starTrek`. After you have changed back to the `starTrek` database, load the JavaScript file we just edited:
 
 ```js
 load('./bin/create-demo.js')
 ```
 
-> *Note*: Tip when working with scripts. Once you know how to run the script leave a comment at the top of the script file on how to run it. This saves time if you need to come back to this script for any reason.
+> *Note*: Tip when working with scripts. Once you know how to run the script, leave a comment at the top of the script file on how to run it. This saves time if you need to return to this script for any reason.
 
-If this was successful you should get back a `true` in your shell.
+If this was successful, you should get back a `true` in your shell.
 
-Let's take a look at what we just created. Inside of your terminal let's run the command `db.tng.find()`, more on this command later. But we should get back something that looks like:
+Let's take a look at what we just created. Inside your terminal, let's run the command `db.tng.find()`; more on this command later. But we should get back something that looks like this:
 
 ```js
 [
@@ -243,11 +247,11 @@ Let's take a look at what we just created. Inside of your terminal let's run the
 ```
 
 - `_id:` - `_id` is a field created by MongoDB when we ran the `insertOne` method.
-- `ObjectId("64ff5e0d7c02aec69ab526c2")` - The BSON type of Object Id. This value must be unique in the collection and is immutable.
+- `ObjectId("64ff5e0d7c02aec69ab526c2")` - The BSON Object Id type. This value must be unique in the collection and is immutable.
 
 > *Note*: `name: 'Jean-Luc Picard'` and `rank: 'Captain'` from our object we passed into the `insertOne` method.
 
-Since our database can have documents with the same field/value pairs we need to be able to distigush them from each other. Let's run the `load` function again to re-run the `bin/create-demo.js` file again. Like before we should get back a `true` if successful. 
+Since our database can have documents with the same field/value pairs, we need to be able to distinguish them from each other. Let's rerun the `load` function to rerun the `bin/create-demo.js` file; we will return a `true` if successful. 
 
 Now run the command `db.tng.find()` inside your terminal again:
 
@@ -266,11 +270,11 @@ Now run the command `db.tng.find()` inside your terminal again:
 ]
 ```
 
-Notice that the two documents have the same `name` and `rank` field/value pairs. However the `_id` values are different. Even though both of these documents contain the same data they are seperate documents.
+Notice that the two documents have the same `name` and `rank` field/value pairs. However, the `_id` values are different. Even though both documents contain the same data, they are separate documents.
 
-## We do: CRUD
+## CRUD
 
-Above we talked about documents and used `insertOne` to create two documents in our `starTrek` database. In this section we are going to dive into CRUD operations. CRUD is an acronym for Create, Read, Update, and Delete:
+Above, we discussed documents and used `insertOne` to create two documents in our `starTrek` database. In this section, we are going to dive into CRUD operations. CRUD is an acronym for Create, Read, Update, and Delete:
 
 - Create - Creates a single or multiple documents inside a collection.
 - Read - Querying or retrieving a single or multiple documents from a collection.
@@ -279,23 +283,23 @@ Above we talked about documents and used `insertOne` to create two documents in 
 
 CRUD operations are essential for database interactions and are used as a framework for design when building an application.
 
-### Create
+### We do: Create
 
-In the demo above we created a single document using `insertOne`. If you ran the script twice you now have two Jean-Luc Picards hanging out in the `tng` collection.
+In the demo above, we created a single document using `insertOne`. If you run the script twice, two Jean-Luc Picards are hanging out in the `tng` collection.
 
-Let's insert multiple documents by adding some more crew members from Star Trek: The Next Generation. Inside of `bin/create.js`:
+Let's insert multiple documents by adding more Star Trek: The Next Generation crew members. Inside of `bin/create.js`:
 
 ```js
 db.tng.insertMany()
 ```
 
-- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
-- `tng` - The collection we want to insert our documents into. Since a database can have many collections you have to specifiy which collection to use. Watch out for spelling errors here! Remember if a collection does not exits and we run a create document method it will create the collection for us. So if we had `db.tngs.insertMany({...})` we would end up with two collections in this database. One `tng` and another `tngs`.
+- `db` - The database that we are currently using. Since we are running this with our connected shell, we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to insert our documents into. Since a database can have many collections, you must specify which collection to use. Watch out for spelling errors here! Remember, if a collection does not exist and we run a create document method, it will make the collection for us. So if we had `db.tngs.insertMany({...})`, we would have two collections in this database. One `tng` and another `tngs`.
 - `insertMany` - MongoDB collection method used to insert many documents. Can also insert one document if that is all that's in the array when passed.
 
-Now let's take a look at the documentation for this method. [`db.collection.insertMany()`](https://www.mongodb.com/docs/manual/reference/method/db.collection.insertMany/). 
+Now, let's take a look at the documentation for this method. [`db.collection.insertMany()`](https://www.mongodb.com/docs/manual/reference/method/db.collection.insertMany/). 
 
-This method is expecting one parameter and has the option of intaking a second parameter. From the documentation:
+This method expects one parameter and can take a second one. From the documentation:
 
 ```js
 db.collection.insertMany(
@@ -307,10 +311,10 @@ db.collection.insertMany(
 )
 ```
 
-- First parameter - `[ <document 1> , <document 2>, ... ]` this is representing we can send this method a list of documents. Since we are writing scripts in a JavaScript file we can translate that over to JavaScript and we can send an array of objects that represent what a document has for field/value pairs.
-- Second parameter - `{ writeConcern: <document>, ordered: <boolean> }` this is representing some options we can set values to or turn on in the case of a boolean. This is optional and we will not need it.
+- The first parameter - `[ <document 1> , <document 2>, ... ]` this is representing we can send this method a list of documents. Since we are writing scripts in a JavaScript file, we can translate that to JavaScript and send an array of objects representing what a document has for field/value pairs.
+- The second parameter - `{ writeConcern: <document>, ordered: <boolean> }` represents some options we can set values to or turn on in the case of a boolean. This is optional, and we will not need it.
 
-Now that we know what the `inserMany` method is expecting let's use it:
+Now that we know what the `inserMany` method is expecting, let's use it:
 
 ```js
 db.tng.insertMany([
@@ -328,55 +332,79 @@ db.tng.insertMany([
 ])
 ```
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/create.js')
 ```
 
-If successful we should get back a `true` in the terminal.
+If successful, we should get back a `true` in the terminal.
 
-Since the second param is optional we can leave it off and just pass in an array of objects that represent the documents we would like to insert. Notice that the last document is missing the `rank` field/value pair. Since MongoDB does not require us to predfine a schema for our documents in a collection they can differe in field/value pairs.
+Since the second param is optional, we can leave it off and pass in an array of objects representing the documents we want to insert. Notice that the last document is missing the `rank` field/value pair. Since MongoDB does not require us to predefine a schema for our documents in a collection, they can differ in field/value pairs.
 
-### Read
+### You Do: Create
 
-Above we created or inserted in two different ways; `db.collections.insertOne()` and `db.collections.insertMany()`. Now that there is something in the collection of `tng` let's read from it. There are two ways a read action can take:
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.insertOne()` or `db.collections.insertMany()` insert the following:
+
+Fields:
+
+- name
+- isDead
+- age
+
+Values:
+
+- Arya Stark, 18, false
+- Robb Stark, 16 true
+- Sansa Stark, 20 false
+- Bran Stark, 17, false
+- Jon Snow, 25, false
+- Catelyn Stark, 35, true
+- Benjen Stark, 36, true
+- Rickon Stark, 11, true
+- Lyanna Stark, 16, true
+
+Before continuing the talk, change back to the `starTrek` collection.
+
+### We do: Read
+
+Above we created or inserted in two different ways; `db.collections.insertOne()` and `db.collections.insertMany()`. Now that there is something in the collection of `tng`, let's read from it. There are two ways a read action can be taken:
 
 - Index - Reading/retrieving all documents.
 - Show - Reading/retrieving a single document.
 
 #### Index
 
-We will start with index then move to show. Inside of `bin/index.js`:
+We will start with the index and then move to show. Inside of `bin/index.js`:
 
 ```js
 console.log(db.tng.find())
 ```
 
-- `console.log` - Logging to the console what the result are from the `.find()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
-- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
-- `tng` - The collection we want to read from. Unlike with a create method if we make a spelling mistake here it will not create a mispelled collection, it will just give us an error or no reponse.
+- `console.log` - Logging to the console what the results are from the `.find()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action, we would need to throw it into a `console.log`.
+- `db` - The database that we are currently using. Since we are running this with our connected shell, we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to read from. Unlike with a create method, if we make a spelling mistake here, it will not create a misspelled collection; it will just give us an error or no response.
 - `find` - MongoDB Collection method to find all or a subset of documents in a collection.
 
-Again let's use the documentation to see what this method is expecting. [db.collections.find()](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/).
+Again, let's use the documentation to see what this method expects. [db.collections.find()](https://www.mongodb.com/docs/manual/reference/method/db.collection.find/).
 
-This method can have up to three parameters. All of them being optional. We will just focus on the first parameter with is the query. The query is going to be an object we pass in with key/value pairs representing what we are searching for.
+This method can have up to three parameters. All of them are optional. We will just focus on the first parameter, which is the query. The query will be an object we pass in with key/value pairs representing what we are searching for.
 
-Now that we know what this method is expecting let's use it. Back in `bin/index.js`:
+Now that we know what this method expects let's use it. Back in `bin/index.js`:
 
 ```js
 console.log(db.tng.find({}))
 ```
 
-- `{}` - The empty object in we just added is the query. To find all documents in a collection we can either pass in an empty object or leave out the object all together. Both work and are valid options.
+- `{}` - The query is the empty object we just added. To find all documents in a collection, we can either pass in an empty object or leave out the object altogether. Both work and are valid options.
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/index.js')
 ```
 
-If successful we should see all the documents we have created so far followed by a `true`. The `true` is just feedback that the shell gives us when we are able to pass it JavaScript code it was able to run without errors.
+If successful, we should see all the documents we have created so far followed by a `true`. The `true` is just feedback the shell gives us when we pass it JavaScript code; it could run without errors.
 
 ```js
 [
@@ -405,24 +433,24 @@ If successful we should see all the documents we have created so far followed by
 true
 ```
 
-> *Note*: For all these commands we could just run straight in the shell. Some of them make more sense to run directly in the shell than others. Our `db.collection.find()` method is a perfect example of a command that is fit to be ran in the shell. `db.collection.insertMany()` method is an example of one we might want to write a script then load and run it in the shell. It's up to you on what you would like to make your main go to after this talk.
+> *Note*: We could run straight in the shell for all these commands. Some make more sense to run directly in the shell than others. Our `db.collection.find()` method is a perfect example of a command that is fit to run in the shell. `db.collection.insertMany()` method is an example of one we might want to write a script then load and run it in the shell. What you want to make your main go-to after this talk is up to you.
 
-Let's add some key/value pairs to our query object and narrow down our index. Back inside of `bin/index.js`:
+Let's add key/value pairs to our query object and narrow our index. Back inside of `bin/index.js`:
 
 ```js
 console.log(db.tng.find({rank: 'Captain'}))
 ```
 
 - `rank` - Field name we want to search through.
-- `Captain` - Value we want to search for. This is case sensitve so a `captain` will not return any found documents.
+- `Captain` - Value we want to search for. This is case-sensitive, so a `captain` will not return any found documents.
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/index.js')
 ```
 
-If sucessful we should get back all the documents that have the field/value pair of `rank: 'Captain'` followed by a `true`.
+If successful, we should return all the documents with the field/value pair of `rank: 'Captain'` followed by a `true`.
 
 ```js
 [
@@ -445,25 +473,24 @@ If sucessful we should get back all the documents that have the field/value pair
 true
 ```
 
-TODO: Update insert data to have some different data types to do these fancy queries
-The method `db.collection.find()` can be used to query for just about anything we would like in our database. We also have [Comparison Query Operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/) that we can use. 
+The method `db.collection.find()` can query anything we want in our database. We also have [Comparison Query Operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/) that we can use. 
 
 #### Show
 
-Now that we have an index action working we can move on to the show action. Inside of `bin/show.js`:
+Now that we have an index action working, we can move on to the show action. Inside of `bin/show.js`:
 
 ```js
 console.log(db.tng.findOne())
 ```
 
-- `console.log` - Logging to the console what the result are from the `.findOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
-- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
-- `tng` - The collection we want to read from. Unlike with a create method if we make a spelling mistake here it will not create a mispelled collection, it will just give us an error or no reponse.
-- `findOne` - MongoDB Collection method to find one document. If there are multiple documents making the query passed it, this method will returnt the first it encounters.
+- `console.log` - Logging to the console what the results are from the `.findOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action, we would need to throw it into a `console.log`.
+- `db` - The database that we are currently using. Since we are running this with our connected shell, we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `tng` - The collection we want to read from. Unlike with a create method, if we make a spelling mistake here, it will not create a misspelled collection; it will just give us an error or no response.
+- `findOne` - MongoDB Collection method to find one document. If multiple documents are making the query passed, this method will return the first it encounters.
 
 Always use the documentation to see what this method is expecting. [db.collections.findOne()](https://www.mongodb.com/docs/manual/reference/method/db.collection.findOne/).
 
-Just like with the `db.collection.find()` this method has three optional parameters. We will focus on the query parameter which is the first one passed in.
+Like with the `db.collection.find()`, this method has three optional parameters. We will focus on the query parameter, the first one passed in.
 
 Back in `bin/show.js`:
 
@@ -472,9 +499,9 @@ console.log(db.tng.findOne({name: 'Beverly Crusher'}))
 ```
 
 - `name` - The field we want to search through.
-- `Beverly Crusher`- The value we are searching for. This is also case and space sensitive.
+- `Beverly Crusher`- The value we are searching for. This is also case and space-sensitive.
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/show.js')
@@ -491,24 +518,35 @@ We should see a single document with a field/value pair of `name: 'Beverly Crush
 true
 ```
 
-Let's take a notice at what is being return in both the `db.collection.find()` and the `db.collections.findOne()`. The `db.collection.find()` is returning an array of documents while the `db.collections.findOne()` is returning just the document. This is an imported difference that might go over looked. If we are being given back and array of posible documents we need to handle it as such.
+Let's take notice of what is being returned in both the `db.collection.find()` and the `db.collections.findOne()`. The `db.collection.find()` returns an array of documents, while the `db.collections.findOne()` returns just the document. This is an imported difference that might be overlooked. If we are being given back an array of possible documents, we must handle it as such.
 
-### Update
+### You Do: Read
 
-Now that we are able to read our documents let's start to update some of them. There are a couple of ways to update documents in MongoDB we are going to be looking at just two collection methods for update: `db.collection.updateMany()` and `db.collection.updateOne()`. Inside of `bin/update.js`:
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.find()` or `db.collections.findOne()` search for the following:
+
+- Find all Stark house members above the age of 18.
+- Find Arya Stark.
+- Find all the living members of House Stark.
+- Find all dead members of House Stark.
+
+Before continuing the talk, change back to the `starTrek` collection.
+
+### We do: Update
+
+Now that we can read our documents let's update some of them. There are a couple of ways to edit documents in MongoDB; we will look at just two collection methods for update: `db.collection.updateMany()` and `db.collection.updateOne()`. Inside of `bin/update.js`:
 
 ```js
 console.log(db.tng.updateMany())
 ```
 
-- `console.log` - Logging to the console what the result are from the `.updateMany()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
-- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `console.log` - Logging to the console what the results are from the `.updateMany()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action, we would need to throw it into a `console.log`.
+- `db` - The database that we are currently using. Since we are running this with our connected shell, we can change our database using the `use` command. The current database is displayed on the command line in the shell.
 - `tng` - The collection we want to update in.
-- `updateMany` - A collection methods used to update mulitple documents in a collection.
+- `updateMany` - A collection method used to update multiple documents in a collection.
 
-Let's take a look at the documentation to see what this method is expecting. [dv.collection.updateMany](https://www.mongodb.com/docs/manual/reference/method/db.collection.updateMany/).
+Let's look at the documentation to see what this method expects. [dv.collection.updateMany](https://www.mongodb.com/docs/manual/reference/method/db.collection.updateMany/).
 
-This method is expecting 3 parameters. The first two are not optional and will need to be provided. The third one is optional and we will not be using it during this talk. Taken directly from the MongoDB documentation:
+This method is expecting 3 parameters. The first two are not optional and will need to be provided. The third one is optional; we will not use it during this talk. Taken directly from the MongoDB documentation:
 
 ```js
 db.collection.updateMany(
@@ -524,10 +562,10 @@ db.collection.updateMany(
 )
 ```
 
-- `<filter>` - Used to find which documents we want to update. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for.
+- `<filter>` - Used to find which documents we want to update. Like in the `db.collection.find()` demo, we can pass in a field/value pair to search for.
 - `<update>` - What we want to update in the found documents.
 
-Now that we know what `updateMany` expecting let's use it:
+Now that we know what `updateMany` expecting, let's use it:
 
 ```js
 console.log(db.tng.updateMany({
@@ -539,18 +577,18 @@ console.log(db.tng.updateMany({
 }))
 ```
 
-- `{ name: 'Jean-Luc Picard' }` - We are search for all documents with the `name` of `Jean-Luc Picard`. Since we have two in our collection this should match two documents.
-- `{$set: { onceBorg: true }}` - Adding a new field/value pair. Since we are adding to our documents we need to use `$set` and pass it a new field/value pair to add.
+- `{ name: 'Jean-Luc Picard' }` - We are searching for all documents with the `name` of `Jean-Luc Picard`. Since we have two in our collection, this should match the two documents.
+- `{$set: { onceBorg: true }}` - Adding a new field/value pair. Since we are adding to our documents, we need to use `$set` and pass it a new field/value pair to add.
 
-> *Note*: There is a differnce in using `$set` to add a new field/value pair and `$set` to update a field/value pair. When we add a new field/value pair we are call the [`$set`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#mongodb-pipeline-pipe.-set) that is an alais for [`$addFields`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#mongodb-pipeline-pipe.-addFields). When we are updating an exsiting field/value pair we are calling the [`$set`](mongodb.com/docs/manual/reference/operator/update/set/#mongodb-update-up.-set) operator that will replace the value of a field/value pair.
+> *Note*: There is a difference between using `$set` to add a new field/value pair and `$set` to update a field/value pair. When we add a new field/value pair, we call the [`$set`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#mongodb-pipeline-pipe.-set) that is an alias for [`$addFields`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/#mongodb-pipeline-pipe.-addFields). When we are updating an existing field/value pair we are calling the [`$set`](mongodb.com/docs/manual/reference/operator/update/set/#mongodb-update-up.-set) operator that will replace the value of a field/value pair.
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/update.js')
 ```
 
-If successful we should get back an object with a couple of key/value pairs followed by a `true`.
+If successful, we should return an object with a couple of key/value pairs followed by a `true`.
 
 ```js
 {
@@ -563,15 +601,15 @@ If successful we should get back an object with a couple of key/value pairs foll
 true
 ```
 
-- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
-- `insertedId: null` - In some cases, not this one, we can query the collection see if there is something to update if not then we can add a new document with the field/value pairs we wanted to update. If this is the case we would be creating new documents and we would get back the number of new documents created here. By default this option is set to false. Expect this key/value pair to be `null` unless you are coding to have this functionality.
-- `matchedCount: 2` - The documents that we found with the filter we passed in. In our case since we are using the `$set` to add a field/value pair to a document.
-- `modifiedCount: 0` - This gives us back the count of how many documents were modified in the last command. Notice here that it's `0` and not `2`. More on that below.
-- `upsertedCount: 0` - To upsert a document we would have to update and insert at the same time. (inSERT + UPdate = upsert). `0` here because we did not upsert.
+- `acknowledged: true` - This lets us know that the JavaScript file was loaded with no errors. This does not mean our update was successful; it just means the file has no errors.
+- `insertedId: null` - In some cases, not this one, we can query the collection to see if there is something to update; if not, we can add a new document with the field/value pairs we want to edit. If this is the case, we will create new documents and get back the number of new documents created here. By default, this option is set to false. Expect this key/value pair to be `null` unless you are coding to have this functionality.
+- `matchedCount: 2` - The documents we found with the filter we passed in. In our case, we are using the `$set` to add a field/value pair to a document.
+- `modifiedCount: 0` - This returns the count of how many documents were modified in the last command. Notice here that it's `0` and not `2`. More on that below.
+- `upsertedCount: 0` - To upsert a document, we must update and insert it simultaneously. (inSERT + UPdate = upsert). `0` here because we did not upsert.
 
-> *Note*: The reason as to why we are getting a `0` for the `modifiedCount` is because we are using the [`$set`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#mongodb-pipeline-pipe.-set) to add a new field. If we were to run the command again we would see an `modifiedCount` change to `2`. This is becuase we are now updating an existing field and are using the update [`$set`](mongodb.com/docs/manual/reference/operator/update/set/#mongodb-update-up.-set) operator.
+> *Note*: The reason why we are getting a `0` for the `modifiedCount` is because we are using the [`$set`](https://www.mongodb.com/docs/manual/reference/operator/aggregation/set/#mongodb-pipeline-pipe.-set) to add a new field. If we were to rerun the command, we would see a `modifiedCount` change to `2`. This is because we are now updating an existing field and are using the update [`$set`](mongodb.com/docs/manual/reference/operator/update/set/#mongodb-update-up.-set) operator.
 
-Before we dive into `db.collection.updateOne()` let's run the index file again to see our changes. Inside of your terminal let's query all the documents in the `tng` collection:
+Before we dive into `db.collection.updateOne()`, let's rerun the index file to see our changes. Inside your terminal, allow's query all the documents in the `tng` collection:
 
 ```js
 db.tng.find()
@@ -607,13 +645,13 @@ And we should see the added field/value pair on our `Jean-Luc Picard` documents:
 ]
 ```
 
-Now we can dive into `db.collection.updateOne()`. Back inside of `bin/update.js` let's comment out the `db.collection.updateMany()` command before we write our new update command:
+Now we can dive into `db.collection.updateOne()`. Back inside of `bin/update.js`, let's comment out the `db.collection.updateMany()` command before we write our new update command:
 
 ```js
 console.log(db.tng.updateOne())
 ```
 
-This method can intake 3 params. Just like the `db.collection.updateMany()` we are just going to focus on the first 2 which are required. Taken from the documentation:
+This method can intake 3 params. Like the `db.collection.updateMany()`, we will focus on the first two required. Taken from the documentation:
 
 ```js
 db.collection.updateOne(
@@ -629,10 +667,10 @@ db.collection.updateOne(
 )
 ```
 
-- `<filter>` - Used to find which documents we want to update. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for. If there are mulitple documents matching the fileter `updateOne` will update the first one it matches.
+- `<filter>` - Used to find which documents we want to update. Just like in the `db.collection.find()` demo, we can pass in a field/value pair to search for. If multiple documents match the filter, `updateOne` will update the first one it matches.
 - `<update>` - What we want to update in the found document.
 
-Now we know what this method is expecting let's us it:
+Now we know what this method is expecting, let's use it:
 
 ```js
 console.log(db.tng.updateOne({
@@ -645,16 +683,16 @@ console.log(db.tng.updateOne({
 }))
 ```
 
-- `{ name: 'Jean-Luc Picard' }` - We are search for all documents with the `name` of `Jean-Luc Picard`. Since we have two in our collection this should match two documents but will only update the first one it finds.
+- `{ name: 'Jean-Luc Picard' }` - We are searching for all documents with the `name` of `Jean-Luc Picard`. Since we have two in our collection, this should match two documents, but it will only update the first one it finds.
 - `$set: { onceBorg: false, name: 'Locutus' }` - Updating the found documents `onceBorg` and `name` values.
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/update.js')
 ```
 
-If this was successful we should see the following:
+If this was successful, we should see the following:
 
 ```js
 {
@@ -667,13 +705,13 @@ If this was successful we should see the following:
 true
 ```
 
-- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
-- `insertedId: null` - In some cases, not this one, we can query the collection see if there is something to update if not then we can add a new document with the field/value pairs we wanted to update. If this is the case we would be creating new documents and we would get back the number of new documents created here. By default this option is set to false. Expect this key/value pair to be `null` unless you are coding to have this functionality.
-- `matchedCount: 1` - The document that we found with the filter we passed in.
-- `modifiedCount: 1` - This gives us back the count of how many documents were modified in the last command. Since in this expample we are modifiying an existing field/value pair we get back a `modifiedCount` value.
-- `upsertedCount: 0` - To upsert a document we would have to update and insert at the same time. (inSERT + UPdate = upsert). `0` here because we did not upsert.
+- `acknowledged: true` - This lets us know that the JavaScript file was loaded with no errors. This does not mean our update was successful; it just means the file has no errors.
+- `insertedId: null` - In some cases, not this one, we can query the collection to see if there is something to update; if not, we can add a new document with the field/value pairs we want to edit. If this is the case, we will create new documents and get back the number of new documents created here. By default, this option is set to false. Expect this key/value pair to be `null` unless you are coding to have this functionality.
+- `matchedCount: 1` - The document we found with the filter we passed in.
+- `modifiedCount: 1` - This returns the count of how many documents were modified in the last command. Since, in this example, we are modifying an existing field/value pair, we get back a `modifiedCount` value.
+- `upsertedCount: 0` - To upsert a document, we must update and insert it simultaneously. (inSERT + UPdate = upsert). `0` here because we did not upsert.
 
-Lastly for update let's see how that last command upated our documents. In your terminal use the command:
+Lastly, for the update, let's see how that last command updated our documents. In your terminal, use the command:
 
 ```js
 db.tng.find()
@@ -709,9 +747,19 @@ And we should see the following:
 ]
 ```
 
-### Delete
+### You Do: Update
 
-Lastly we have come to our last CRUD action, delete. And just like with our other CRUD methods we are given the option to either delete a single document or to delete multiple documents. We will use the single delete followed by the mulitple delete. 
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.updateMany()` or `db.collections.updateOne()` find and edit the following documents:
+
+- Find the document that has the name value of Sansa Stark. Add the field/value pair of: `wardenOfTheNorth: true`.
+- Find the document that has the name value of Jon Snow. Edit the name value to be `Jon Targaryen`.
+- Remove the field/value pair of `age: 17` from the document that has the name value of Bran Stark.
+
+Before continuing the talk, change back to the `starTrek` collection.
+
+### We do: Delete
+
+Lastly, we have come to our last CRUD action, delete. Like with our other CRUD methods, we are given the option to either delete a single document or multiple documents. We will use the single delete followed by the multiple delete. 
 
 Our first command that we will use is `db.collection.deleteOne()`. Inside of our `bin/delete.js`:
 
@@ -719,12 +767,12 @@ Our first command that we will use is `db.collection.deleteOne()`. Inside of our
 console.log(db.tng.deleteOne())
 ```
 
-- `console.log` - Logging to the console what the result are from the `.deleteOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
-- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `console.log` - Logging to the console what the results are from the `.deleteOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action, we would need to throw it into a `console.log`
+- `db` - The database that we are currently using. Since we are running this with our connected shell, we can change our database using the `use` command. The current database is displayed on the command line in the shell.
 - `tng` - The collection we want to update in.
-- `deleteOne` - A collection methods used to delete a single document from a collection.
+- `deleteOne` - A collection method used to delete a single document from a collection.
 
-Using the documentation let's see what this method is expecting. Taken from the documentation:
+Using the documentation, let's see what this method is expecting. Taken from the documentation:
 
 ```js
 db.collection.deleteOne(
@@ -732,14 +780,14 @@ db.collection.deleteOne(
     {
       writeConcern: <document>,
       collation: <document>,
-      hint: <document|string>        // Available starting in MongoDB 4.4
+      hint: <document|string> // Available starting in MongoDB 4.4
     }
 )
 ```
 
-This method can intake 2 parameters. The first is required and the second is optional. We will not be using the second parameter for this talk.
+This method can intake 2 parameters. The first is required, and the second is optional. We will not be using the second parameter for this talk.
 
-- `<filter>` - Used to find which documents we want to delete. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for. If there are mulitple documents matching the fileter `delete` will remove the first one it matches.
+- `<filter>` - Used to find which documents we want to delete. Just like in `db.collection.find()` demo, we can pass in a field/value pair to search for. If multiple documents match the filter, `delete` will remove the first one it matches.
 
 Let's pass the filter so we can remove a single document:
 
@@ -749,23 +797,23 @@ console.log(db.tng.deleteOne({
 }))
 ```
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/delete.js')
 ```
 
-If this was successful we should see the following:
+If this was successful, we should see the following:
 
 ```js
 { acknowledged: true, deletedCount: 1 }
 true
 ```
 
-- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
+- `acknowledged: true` - This lets us know that the JavaScript file was loaded with no errors. This does not mean our update was successful; it just means the file has no errors.
 - `deletedCount: 1` - The count of how many documents were deleted when running this command.
 
-Just like with update let's query our collection in the terminal:
+Just like with the update, let's query our collection in the terminal:
 
 ```js
 db.tng.find()
@@ -796,18 +844,18 @@ We can see that the document of `Beverly Crusher` is gone:
 ]
 ```
 
-At the end of this talk let's remove the rest of the documents from our collection using the d`db.collection.deleteMany()` method. Back inside of the `bin/delete.js` first comment out the last delete method and let's add a new delete method:
+At the end of this talk, let's remove the rest of the documents from our collection using the `db.collection.deleteMany()` method. Back inside of the `bin/delete.js` first comment out the last delete method, and let's add a new delete method:
 
 ```js
 console.log(db.tng.deleteMany())
 ```
 
-- `console.log` - Logging to the console what the result are from the `.deleteOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action we would need to throw it into a `console.log`
-- `db` - The database that we are currently using. Since we are running this with our connected shell we can change our database using the `use` command. The current database is displayed on the command line in the shell.
+- `console.log` - Logging to the console what the results are from the `.deleteOne()`. Just like if we were to add `2 + 2` in a JavaScript file, to see the outcome of that add action, we would need to throw it into a `console.log`.
+- `db` - The database that we are currently using. Since we are running this with our connected shell, we can change our database using the `use` command. The current database is displayed on the command line in the shell.
 - `tng` - The collection we want to update in.
-- `deleteMany` - A collection methods used to delete a multiple documents from a collection.
+- `deleteMany` - A collection method used to delete multiple documents from a collection.
 
-Before we use this method let's see what it needs. Taken from the documentation:
+Before we use this method, let's see what it needs. Taken from the documentation:
 
 ```js
 db.collection.deleteMany(
@@ -819,35 +867,35 @@ db.collection.deleteMany(
 )
 ```
 
-The above method can intake two parameters. The first is mandatory and we will need to use and the second is optional and we will not use in this talk.
+The above method can intake two parameters. The first is mandatory, and we will need to use and the second is optional, and we will not use it in this talk.
 
-- `<filter>` - Used to find which documents we want to delete. Just like in `db.collection.find()` demo we can pass in a field/value pair to search for.
+- `<filter>` - Used to find which documents we want to delete. Just like in `db.collection.find()` demo, we can pass in a field/value pair to search for.
 
-Now that we know what we need for this method let's use it:
+Now that we know what we need for this method, let's use it:
 
 ```js
 console.log(db.tng.deleteMany({}))
 ```
 
-- `{}` - An empty filter. When an empty filter is passed in we will remove all documents from the collection
+- `{}` - An empty filter. When an empty filter is passed in, we will remove all documents from the collection
 
-Now let's load and run the file. Inside your shell first make sure you are in the `starTrek` database then use the below command:
+Now, let's load and run the file. Inside your shell, first make sure you are in the `starTrek` database, then use the below command:
 
 ```js
 load('./bin/delete.js')
 ```
 
-If this was successful we should see the following:
+If this was successful, we should see the following:
 
 ```js
 { acknowledged: true, deletedCount: 4 }
 true
 ```
 
-- `acknowledged: true` - This let's us know that the JavaScript file was loaded with no errors. Does not mean our update was successful, just means the file has no errors.
+- `acknowledged: true` - This lets us know that the JavaScript file was loaded with no errors. This does not mean our update was successful; it just means the file has no errors.
 - `deletedCount: 4` - The count of how many documents were deleted when running this command.
 
-Lastly let's query the collection again and see if there is anything left. Inside of our shell:
+Lastly, let's query the collection again and see if anything is left. Inside of our shell:
 
 ```js
 db.tng.find()
@@ -855,6 +903,14 @@ db.tng.find()
 
 We can see that there is nothing returned.
 
+### You Do: Delete
+
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.deleteOne()` or `db.collections.deleteMany()` remove the following documents:
+
+- Remove anyone dead from the collection.
+- Remove anyone under the age of 19.
+- Remove anyone whose last name is not Stark.
+
 ## Wrap up
 
-MongoDB is a NoSQL document-orientated database that allows us to store loosly related documents is collections. While interacting with MongoDB through the shell like we did in this talk is not something that we would use in a real world application it's a must know for development. As developers we need to know how to query our databases directly to see how our code manipulates the documents.
+MongoDB is a NoSQL document-orientated database that allows us to store loosely related documents in collections. While interacting with MongoDB through the shell like we did in this talk is not something we would use in an actual world application, it's a must-know for development. As developers, we need to know how to query our databases directly to see how our code manipulates the documents.
