@@ -24,16 +24,20 @@ Okie dokie, artichokes, let's come together and talk about MongoDB. This talk wi
   - [NoSQL Database](#nosql-database)
   - [MongoDB](#mongodb)
     - [Connection to Atlas](#connection-to-atlas)
-    - [We do: Databases and Collections](#we-do-databases-and-collections)
+  - [We do: Databases and Collections](#we-do-databases-and-collections)
     - [You do: Databases and Collections](#you-do-databases-and-collections)
     - [Demo: Documents](#demo-documents)
-  - [We do: CRUD](#we-do-crud)
-    - [Create](#create)
-    - [Read](#read)
+  - [CRUD](#crud)
+    - [We do: Create](#we-do-create)
+    - [You Do: Create](#you-do-create)
+    - [We do: Read](#we-do-read)
       - [Index](#index)
       - [Show](#show)
-    - [Update](#update)
-    - [Delete](#delete)
+    - [You Do: Read](#you-do-read)
+    - [We do: Update](#we-do-update)
+    - [You Do: Update](#you-do-update)
+    - [We do: Delete](#we-do-delete)
+    - [You Do: Delete](#you-do-delete)
   - [Wrap up](#wrap-up)
 
 
@@ -130,7 +134,7 @@ We will use the [mongosh](https://www.mongodb.com/docs/mongodb-shell/) to connec
 
 Follow the instructions [here](https://www.mongodb.com/docs/atlas/mongo-shell-connection/) to connect via the shell.
 
-### We do: Databases and Collections
+## We do: Databases and Collections
 
 The following exercises will be done using the MongoDB shell, `mongosh`. Use the above instructions to connect to your Atlas Cloud MongoDB account.
 
@@ -268,7 +272,7 @@ Now run the command `db.tng.find()` inside your terminal again:
 
 Notice that the two documents have the same `name` and `rank` field/value pairs. However, the `_id` values are different. Even though both documents contain the same data, they are separate documents.
 
-## We do: CRUD
+## CRUD
 
 Above, we discussed documents and used `insertOne` to create two documents in our `starTrek` database. In this section, we are going to dive into CRUD operations. CRUD is an acronym for Create, Read, Update, and Delete:
 
@@ -279,7 +283,7 @@ Above, we discussed documents and used `insertOne` to create two documents in ou
 
 CRUD operations are essential for database interactions and are used as a framework for design when building an application.
 
-### Create
+### We do: Create
 
 In the demo above, we created a single document using `insertOne`. If you run the script twice, two Jean-Luc Picards are hanging out in the `tng` collection.
 
@@ -320,7 +324,7 @@ db.tng.insertMany([
     },
     {
         name: 'Beverly Crusher',
-        rank: 'Chief Medical Officer
+        rank: 'Chief Medical Officer'
     },
     {
         name: 'Deanna Troi'
@@ -338,7 +342,31 @@ If successful, we should get back a `true` in the terminal.
 
 Since the second param is optional, we can leave it off and pass in an array of objects representing the documents we want to insert. Notice that the last document is missing the `rank` field/value pair. Since MongoDB does not require us to predefine a schema for our documents in a collection, they can differ in field/value pairs.
 
-### Read
+### You Do: Create
+
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.insertOne()` or `db.collections.insertMany()` insert the following:
+
+Fields:
+
+- name
+- isDead
+- age
+
+Values:
+
+- Arya Stark, 18, false
+- Robb Stark, 16 true
+- Sansa Stark, 20 false
+- Bran Stark, 17, false
+- Jon Snow, 25, false
+- Catelyn Stark, 35, true
+- Benjen Stark, 36, true
+- Rickon Stark, 11, true
+- Lyanna Stark, 16, true
+
+Before continuing in the talk change back to the `starTrek` collection.
+
+### We do: Read
 
 Above we created or inserted in two different ways; `db.collections.insertOne()` and `db.collections.insertMany()`. Now that there is something in the collection of `tng`, let's read from it. There are two ways a read action can be taken:
 
@@ -445,7 +473,6 @@ If successful, we should return all the documents with the field/value pair of `
 true
 ```
 
-TODO: Update insert data to have some different data types to do these fancy queries
 The method `db.collection.find()` can query anything we want in our database. We also have [Comparison Query Operators](https://www.mongodb.com/docs/manual/reference/operator/query-comparison/) that we can use. 
 
 #### Show
@@ -493,7 +520,18 @@ true
 
 Let's take notice of what is being returned in both the `db.collection.find()` and the `db.collections.findOne()`. The `db.collection.find()` returns an array of documents, while the `db.collections.findOne()` returns just the document. This is an imported difference that might be overlooked. If we are being given back an array of possible documents, we must handle it as such.
 
-### Update
+### You Do: Read
+
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.find()` or `db.collections.findOne()` search for the following:
+
+- Find all Stark house members above the age of 18.
+- Find Arya Stark.
+- Find all the living members of house Stark.
+- Find all dead members of house Stark.
+
+Before continuing in the talk change back to the `starTrek` collection.
+
+### We do: Update
 
 Now that we can read our documents let's update some of them. There are a couple of ways to edit documents in MongoDB; we will look at just two collection methods for update: `db.collection.updateMany()` and `db.collection.updateOne()`. Inside of `bin/update.js`:
 
@@ -709,7 +747,17 @@ And we should see the following:
 ]
 ```
 
-### Delete
+### You Do: Update
+
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.updateMany()` or `db.collections.updateOne()` find and edit the following documents:
+
+- Find the document that has the name value of Sansa Stark. Add the field/value pair of: `wardenOfTheNorth: true`.
+- Find the document that has the name value of Jon Snow. Edit the name value to be `Jon Targaryen`.
+- Remove the field/value pair of `age: 17` from the document that has the name value of Bran Stark.
+
+Before continuing in the talk change back to the `starTrek` collection.
+
+### We do: Delete
 
 Lastly, we have come to our last CRUD action, delete. Like with our other CRUD methods, we are given the option to either delete a single document or multiple documents. We will use the single delete followed by the multiple delete. 
 
@@ -732,7 +780,7 @@ db.collection.deleteOne(
     {
       writeConcern: <document>,
       collation: <document>,
-      hint: <document|string>        // Available starting in MongoDB 4.4
+      hint: <document|string> // Available starting in MongoDB 4.4
     }
 )
 ```
@@ -854,6 +902,14 @@ db.tng.find()
 ```
 
 We can see that there is nothing returned.
+
+### You Do: Delete
+
+Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.deleteOne()` or `db.collections.deleteMany()` remove the following documents:
+
+- Remove anyone who id dead from the collection.
+- Remove anyone under the age of 19.
+- Remove anyone who's last name is not Stark.
 
 ## Wrap up
 
