@@ -364,7 +364,7 @@ Values:
 - Rickon Stark, 11, true
 - Lyanna Stark, 16, true
 
-Before continuing in the talk change back to the `starTrek` collection.
+Before continuing the talk, change back to the `starTrek` collection.
 
 ### We do: Read
 
@@ -526,10 +526,10 @@ Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Usin
 
 - Find all Stark house members above the age of 18.
 - Find Arya Stark.
-- Find all the living members of house Stark.
-- Find all dead members of house Stark.
+- Find all the living members of House Stark.
+- Find all dead members of House Stark.
 
-Before continuing in the talk change back to the `starTrek` collection.
+Before continuing the talk, change back to the `starTrek` collection.
 
 ### We do: Update
 
@@ -755,7 +755,7 @@ Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Usin
 - Find the document that has the name value of Jon Snow. Edit the name value to be `Jon Targaryen`.
 - Remove the field/value pair of `age: 17` from the document that has the name value of Bran Stark.
 
-Before continuing in the talk change back to the `starTrek` collection.
+Before continuing the talk, change back to the `starTrek` collection.
 
 ### We do: Delete
 
@@ -907,9 +907,9 @@ We can see that there is nothing returned.
 
 Let's do a rep of the above. Switch back to the `gameOfThrones` collection. Using `db.collections.deleteOne()` or `db.collections.deleteMany()` remove the following documents:
 
-- Remove anyone who id dead from the collection.
+- Remove anyone dead from the collection.
 - Remove anyone under the age of 19.
-- Remove anyone who's last name is not Stark.
+- Remove anyone whose last name is not Stark.
 
 ## Wrap up
 
