@@ -13,11 +13,17 @@ This talk expects you to have a base knowledge of:
 
 - CLI
 - JavaScript
+- Git and GitHub
+
+## How to use this talk
+
+Fork and clone this repository. This talk is broken down into sections. Each section has a `README.md` file that contains the information for that section. The `README.md` file will contain a `We do` and a `You do` section. The `We do` section will contain the code and the explanation of the code. The `You do` section will contain the instructions for you to do the code yourself.
 
 ## Overview
 
 Okie dokie, artichokes, let's come together and talk about MongoDB. This talk will cover the following:
 - [An Introduction to MongoDB](#an-introduction-to-mongodb)
+  - [How to use this talk](#how-to-use-this-talk)
   - [Overview](#overview)
   - [Databases](#databases)
   - [SQL Databases](#sql-databases)
@@ -43,24 +49,23 @@ Okie dokie, artichokes, let's come together and talk about MongoDB. This talk wi
     - [MongoDB Methods](#mongodb-methods)
   - [Have questions? Or see a mistake?](#have-questions-or-see-a-mistake)
 
-
 ## Databases
 
 Databases are an organized collection of data stored locally or remotely. They are designed to efficiently manage, store, retrieve, and manipulate data for whatever purpose we need. Think of a social media site. A database is a fundamental part of that site. We need to manage, store, and retrieve any posts the user makes.
 
-Characteristics of a database include (but not limited to):
+Characteristics of a database include (*but not limited to*):
 
-- Data Structure - Data is organized in some format. Database structure will vary between different database solutions.
-- Data Relationships - Data can be related to each other somehow. Using the social media example, a User (single database entry) can have a Profile (separate database entry). In this example, the User can have a Profile resulting in a one-to-one relationship.
-- Query Language - A way to interact with the database. Functions and methods that allow us to retrieve, insert, update, and delete data entries.
+- **Data Structure** - Data is organized in some format. Database structure will vary between different database solutions.
+- **Data Relationships** - Data can be related to each other somehow. Using the social media example, a User (single database entry) can have a Profile (separate database entry). In this example, the User can have a Profile resulting in a one-to-one relationship.
+- **Query Language** - A way to interact with the database. Functions and methods that allow us to retrieve, insert, update, and delete data entries.
 
-A couple of database types include (but are not limited to):
+A couple of database types include (*but are not limited to*):
 
-- Relational Database - MySQL, PostgreSQL, Oracle.
-- NoSQL Database - MongoDB.
-- NewSQL Database - Google Spanner, CockroachDB.
-- In-Memory Database - Redis, Memcached.
-- Time-Series Database - InfluxDB, Prometheus.
+- **Relational Database** - MySQL, PostgreSQL, Oracle.
+- **NoSQL Database** - MongoDB.
+- **NewSQL Database** - Google Spanner, CockroachDB.
+- **In-Memory Database** - Redis, Memcached.
+- **Time-Series Database** - InfluxDB, Prometheus.
 
 ## SQL Databases
 
@@ -77,7 +82,7 @@ Let's use the social media example again. Users on a social media site can make 
 | 3  | Beverly Crusher  | Doctor     |
 | 4  | Deanna Troi      | NULL       |
 
-Notice that a column, ' PK, ' was not mentioned. Every data entry to a SQL database will be given a primary key or `PK`. We can use the primary key to interact with a specific data entity; this can take the form of reading, updating, or deleting that data entity.
+Notice that a column, `PK`,  was not mentioned. Every data entry to a SQL database will be given a primary key or `PK`. We can use the primary key to interact with a specific data entity; this can take the form of reading, updating, or deleting that data entity.
 
 With the table structure, we are reinforcing that every data entry will have the same keys or fields. In the example above, if we add another row (data entry), that entry would have a name and a username property.
 
@@ -87,10 +92,10 @@ NoSQL databases are database management systems that manage data that doesn't fi
 
 There are a couple of data models for NoSQL databases:
 
-- Graph - This type of data representation is ideal for applications with complex relationships or network-like structures.
-- Column-family stores - Mimics is almost an SQL structure with data in columns.
-- Key-value stores - Data is represented as key/value pairs.
-- Documents stores - Data is stored in a semi-structed document. This is either JSON or BSON.
+- **Graph** - This type of data representation is ideal for applications with complex relationships or network-like structures.
+- **Column-family stores** - Mimics is almost an SQL structure with data in columns.
+- **Key-value stores** - Data is represented as key/value pairs.
+- **Documents stores** - Data is stored in a semi-structed document. This is either JSON or BSON.
 
 **Profile Collection**
 
@@ -279,10 +284,10 @@ Notice that the two documents have the same `name` and `rank` field/value pairs.
 
 Above, we discussed documents and used `insertOne` to create two documents in our `starTrek` database. In this section, we are going to dive into CRUD operations. CRUD is an acronym for Create, Read, Update, and Delete:
 
-- Create - Creates a single or multiple documents inside a collection.
-- Read - Querying or retrieving a single or multiple documents from a collection.
-- Update - Modify or update a single or multiple documents in a collection.
-- Delete - Removing or deleting a single or multiple documents from a database.
+- **Create** - Creates a single or multiple documents inside a collection.
+- **Read** - Querying or retrieving a single or multiple documents from a collection.
+- **Update** - Modify or update a single or multiple documents in a collection.
+- **Delete** - Removing or deleting a single or multiple documents from a database.
 
 CRUD operations are essential for database interactions and are used as a framework for design when building an application.
 
